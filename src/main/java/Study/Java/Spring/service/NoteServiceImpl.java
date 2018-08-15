@@ -6,9 +6,10 @@ import Study.Java.Spring.entity.Note;
 import Study.Java.Spring.repository.NoteRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class NoteServiceImpl implements NoteService{
+public class NoteServiceImpl implements NoteService {
 
     private NoteRepository repository;
 
@@ -19,7 +20,8 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public Note getNoteById(Integer id) {
-        return repository.getOne(id);
+        Optional<Note> result = repository.findById(id);
+        return result == null ? null : result.get();
     }
 
     @Override
@@ -29,7 +31,7 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public void updateNote(Integer id, String message, boolean done) {
-        Note updated = repository.getOne(id);
+        Note updated = repository.findById(id).get();
         updated.setDone(done);
         updated.setMessage(message);
         repository.save(updated);
@@ -37,7 +39,7 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public void deleteNote(Integer id) {
-        repository.delete(repository.getOne(id));
+        repository.deleteById(id);
     }
 
     @Override
